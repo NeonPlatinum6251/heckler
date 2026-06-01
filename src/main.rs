@@ -1,15 +1,15 @@
-use std::env::args;
-
-
 fn main() {
-    let symbolsallowed:[char; 16]  = ['1','2','3','4','5','6','7','8','9','0','A','B','C','D','E','F'];
     let hexcolour = std::env::args().nth(1).expect("no argument given");
-    let length = hexcolour.chars().count();
-    if length != 6 {
-        println!("Expected 6 digits of hex got {}",length);
-        let correctlength = true;
+    let hexcolour = hexcolour.trim_start_matches('#');
+    if hexcolour.len() > 6 {
+        println!("Hexcode must be 6 characters long!");
+        std::process::exit(1);
     }
-    let is_valid = hexcolour.chars().all(|c| symbolsallowed.contains(&c));
-
-    }
+    let red = u8::from_str_radix(&hexcolour[0..2],16).expect("invalid red value");
+    let green =u8::from_str_radix(&hexcolour[2..4],16).expect("invalid green value");
+    let blue =u8::from_str_radix(&hexcolour[4..6],16).expect("invalid blue value");
+    println!(
+        "\x1b[48;2;{};{};{}m        \x1b[0m",
+        red, green, blue
+    );
 }
